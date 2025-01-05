@@ -62,14 +62,20 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = person_id_for_name(input("Name: "))
-    if source is None:
-        sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
-    if target is None:
-        sys.exit("Person not found.")
+    ### source = person_id_for_name(input("Name: "))
+    ### if source is None:
+    ###    sys.exit("Person not found.")
 
-    path = shortest_path(source, target)
+    ### target = person_id_for_name(input("Name: "))
+    ### if target is None:
+    ###    sys.exit("Person not found.")
+
+    ### path = shortest_path(source, target)
+    path = shortest_path('193', '129')
+
+    ### stop here
+    print("finished")
+    return
 
     if path is None:
         print("Not connected.")
@@ -95,23 +101,25 @@ def shortest_path(source, target):
     t_person_id = target
 
     path = None
-    
+
     # Create Frontier
-    BFS = QueueFrontier
+    BFS = QueueFrontier()
 
     # Create a Node with initial state (movie_id, person_id)
     state = (None, s_person_id)
     parent = None
-    action = []
-    initial_state_node = Node(state=initial_state, parent=parent, action=action)
+    action = [state]
+    initial_state_node = Node(state, parent, action)
 
     # Add initial state to frontier
-    BFS.add(initial_state_node)
+    BFS.add(node=initial_state_node)
 
     while(True):
+        print(BFS.frontier)
         # if frontier is empty break loop return None
-        if BFS.empty:
+        if BFS.empty():
             print('frontier is empty')
+            print(BFS.explored_states)
             break
 
         # remove a node from the frontier
@@ -119,7 +127,7 @@ def shortest_path(source, target):
         n_movie_id, n_person_id = node.state
 
         # check for explored solutions
-        if BFS.in_explored(node.state):
+        if BFS.in_explored(state):
             print('find explored state, skipping it')
             continue
 
@@ -127,22 +135,29 @@ def shortest_path(source, target):
         if n_person_id == t_person_id:
             # return solution
             print('find solution')
-            print(path)
-            return node 
+            print(node.action)
+            return node
 
         # expand node
         pairs = neighbors_for_person(n_person_id)
 
+        # add current node state to explored
+        a,b = node.state
+        tup = (a,b)
+        BFS.explored_states.append(tup)
+
         # add resulting nodes to frontier (movie, person) pairs
         for pair in pairs:
+            print('expanding')
 
             # add action step
             actions = node.action
             actions.append(pair)
 
+            n_movie_id, n_person_id = pair
             # create node and add to frontier
-            expanded_node = Node(state=(pair), parent=parent_node, action=action)
-            BFS.add(expanded_node)
+            expanded_node = Node(state=pair, parent=node, action=actions)
+            BFS.add(node=expanded_node)
 
     return path
 

@@ -8,13 +8,15 @@ class Node():
 class StackFrontier():
     def __init__(self):
         self.frontier = []
-        self.explored = []
+        self.explored_states = []
 
     def add(self, node):
         self.frontier.append(node)
 
     def in_explored(self, state):
-        if state in self.explored:
+        a,b = state
+        if (a,b) in self.explored_states:
+            print(a,b)
             return True
         return False
 
