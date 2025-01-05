@@ -91,9 +91,60 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    s_person_id = source
+    t_person_id = target
 
-    # TODO
-    raise NotImplementedError
+    path = None
+    
+    # Create Frontier
+    BFS = QueueFrontier
+
+    # Create a Node with initial state (movie_id, person_id)
+    state = (None, s_person_id)
+    parent = None
+    action = []
+    initial_state_node = Node(state=initial_state, parent=parent, action=action)
+
+    # Add initial state to frontier
+    BFS.add(initial_state_node)
+
+    while(True):
+        # if frontier is empty break loop return None
+        if BFS.empty:
+            print('frontier is empty')
+            break
+
+        # remove a node from the frontier
+        node = BFS.remove()
+        n_movie_id, n_person_id = node.state
+
+        # check for explored solutions
+        if BFS.in_explored(node.state):
+            print('find explored state, skipping it')
+            continue
+
+        # if node containes solution return solution
+        if n_person_id == t_person_id:
+            # return solution
+            print('find solution')
+            print(path)
+            return node 
+
+        # expand node
+        pairs = neighbors_for_person(n_person_id)
+
+        # add resulting nodes to frontier (movie, person) pairs
+        for pair in pairs:
+
+            # add action step
+            actions = node.action
+            actions.append(pair)
+
+            # create node and add to frontier
+            expanded_node = Node(state=(pair), parent=parent_node, action=action)
+            BFS.add(expanded_node)
+
+    return path
 
 
 def person_id_for_name(name):
