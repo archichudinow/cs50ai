@@ -62,23 +62,15 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    ### source = person_id_for_name(input("Name: "))
-    ### if source is None:
-    ###    sys.exit("Person not found.")
+    source = person_id_for_name(input("Name: "))
+    if source is None:
+        sys.exit("Person not found.")
 
-    ### target = person_id_for_name(input("Name: "))
-    ### if target is None:
-    ###    sys.exit("Person not found.")
+    target = person_id_for_name(input("Name: "))
+    if target is None:
+        sys.exit("Person not found.")
 
-    ### path = shortest_path(source, target)
-    path = shortest_path('193', '129')
-
-    ### stop here
-    print("Finished")
-    if path:
-        print(path)
-
-    return
+    path = shortest_path(source, target)
 
     if path is None:
         print("Not connected.")
@@ -110,7 +102,7 @@ def shortest_path(source, target):
     state = (None, s_person_id)
     parent = None
     action = (None, s_person_id)
-    path = [(None, s_person_id)]
+    path = []
     first_node = Node(state, parent, action, path)
 
     # Add initial state to frontier
@@ -120,7 +112,8 @@ def shortest_path(source, target):
     while(True):
         # if frontier is empty break loop return None
         if BFS.empty():
-            print('Frontier is empty, escape loop')
+            #print('Frontier is empty, escape loop')
+            path = None
             break
 
         # remove a node from the frontier
@@ -129,14 +122,14 @@ def shortest_path(source, target):
             continue
 
         n_movie_id, n_person_id = node.state
-        print(f'Checking node {node.state}')
-        print("\n")
+        #print(f'Checking node {node.state}')
+        #print("\n")
 
         # if node containes solution return solution
         if n_person_id == t_person_id:
             # return solution
-            print(f'Find solution, escape loop with {node.state}')
-            print("\n")
+            #print(f'Find solution, escape loop with {node.state}')
+            #print("\n")
             path = node.path
             break
 
@@ -145,8 +138,8 @@ def shortest_path(source, target):
 
         # expand node
         pairs = neighbors_for_person(n_person_id)
-        print(f'Expanding {n_person_id} to: {pairs}')
-        print("\n")
+        #print(f'Expanding {n_person_id} to: {pairs}')
+        #print("\n")
 
         # add resulting nodes to frontier (movie, person) pairs
         for pair in pairs:
@@ -157,14 +150,14 @@ def shortest_path(source, target):
 
             #check if frontier already have this state
             if BFS.contains_state(expanded_node.state):
-                print(f'Find pair  {expanded_node.state} in frontier, skip it, > check next')
-                print("\n")
+                #print(f'Find pair  {expanded_node.state} in frontier, skip it, > check next')
+                #print("\n")
                 continue
 
             # check for explored solutions
             if expanded_node.state in BFS.explored_states:
-                print(f'Find pair {expanded_node.state} in explored state, skip it, > check next')
-                print("\n")
+                #print(f'Find pair {expanded_node.state} in explored state, skip it, > check next')
+                #print("\n")
                 continue
 
             # Pass all checks, adding to frontier
