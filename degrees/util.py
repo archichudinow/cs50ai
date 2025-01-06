@@ -1,24 +1,18 @@
 class Node():
-    def __init__(self, state, parent, action):
+    def __init__(self, state, parent, action, path):
         self.state = state
         self.parent = parent
         self.action = action
+        self.path = path
 
 
 class StackFrontier():
     def __init__(self):
         self.frontier = []
-        self.explored_states = []
+        self.explored_states = set()
 
     def add(self, node):
         self.frontier.append(node)
-
-    def in_explored(self, state):
-        a,b = state
-        if (a,b) in self.explored_states:
-            print(a,b)
-            return True
-        return False
 
     def contains_state(self, state):
         return any(node.state == state for node in self.frontier)
